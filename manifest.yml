@@ -1,0 +1,27 @@
+#inherit: base-manifest.yml
+applications:
+  - name: iimot-predix-engine
+    buildpack: java_buildpack
+    path: target/winddata-timeseries-service-2.0.4.jar
+    memory: 256M
+    services:
+        - TS_iimot02
+        - UAA_iimot02
+
+env:
+    predix_timeseries_name : TS_iimot02
+    predix_oauthRestHost : iimot02.predix-uaa.run.aws-usw02-pr.ice.predix.io
+    predix_oauthClientId : Guy115:Guy115
+    trustedIssuerIdsRegexPattern : ^https://(.*\\.)?iimot02.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token$
+    accessTokenEndpointUrl : https://iimot02.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token
+    clientId : Guy115
+    clientSecret: Guy115
+    predix_connectionTimeout : 5000
+    predix_socketTimeout : 5000
+    predix_poolMaxSize: 200
+    defaultMaxPerRoute: 25
+    predix_wspool_maxIdle : 5
+    predix_wspool_maxActive : 5
+    predix_wspool_maxWait : 8000
+    predix_wspool_maxInstances : 5
+    
