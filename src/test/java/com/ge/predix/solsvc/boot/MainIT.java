@@ -9,6 +9,8 @@ import static org.junit.Assert.assertThat;
 import java.net.URL;
 import java.util.Collections;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +34,8 @@ import com.ge.predix.entity.timeseries.datapoints.queryresponse.DatapointsRespon
 import com.ge.predix.solsvc.restclient.config.OauthRestConfig;
 import com.ge.predix.solsvc.restclient.impl.RestClient;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * 
  * @author predix -
@@ -40,23 +43,23 @@ import com.ge.predix.solsvc.restclient.impl.RestClient;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ComponentScan("com.ge.predix.solsvc.restclient")
+@ComponentScan("com.ge.predix.solsvc.restClient")
 @ActiveProfiles("local")
 @IntegrationTest({"server.port=0"})
-public class WindDataServiceIT {
+public class MainIT {
     
     @Value("${local.server.port}")
     private int localServerPort;
 	
 	private RestTemplate template;
-	
+
+	private static Logger log = LoggerFactory.getLogger(MainIT.class);
 	
 	@Autowired
 	private OauthRestConfig restConfig;
-		
+
 	@Autowired
-	private
-	RestClient restClient;
+	private RestClient restClient;
 	
 	/**
 	 * @throws Exception -
@@ -72,9 +75,9 @@ public class WindDataServiceIT {
 	@SuppressWarnings("nls")
 	@Test
 	public void pingTest()throws Exception {
-		URL windDataURl = new URL("http://localhost:" + this.localServerPort + "/services/windservices/ping");
-		ResponseEntity<String> response = this.template.getForEntity(windDataURl.toString(), String.class);
-		assertThat(response.getBody(), startsWith("Greetings from CXF Bean Rest Service"));		
+		URL iimotDataURl = new URL("http://localhost:" + this.localServerPort + "/iimot/request/ping");
+		ResponseEntity<String> response = this.template.getForEntity(iimotDataURl.toString(), String.class);
+		assertThat(response.getBody(), startsWith("Greetings from predix-engine"));
 	}
 
 	/**
@@ -88,9 +91,9 @@ public class WindDataServiceIT {
 		headers.put("Authorization", Collections.singletonList("testHeader"));
 
 		
-		URL windDataURl = new URL("http://localhost:" + this.localServerPort + "/services/windservices/yearly_data/sensor_id/Compressor-2015:CompressionRatio");
+		URL iimotDataURl = new URL("http://localhost:" + this.localServerPort + "/iimot/request/yearly_data/sensor_id/Compressor-2015:CompressionRatio");
 		
-		ResponseEntity<DatapointsResponse> response = this.template.exchange(windDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), DatapointsResponse.class);
+		ResponseEntity<DatapointsResponse> response = this.template.exchange(iimotDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), DatapointsResponse.class);
 			
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK,response.getStatusCode());
@@ -107,9 +110,9 @@ public class WindDataServiceIT {
 		headers.put("Authorization", Collections.singletonList("testHeader"));
 
 		
-		URL windDataURl = new URL("http://localhost:" + this.localServerPort + "/services/windservices/latest_data/sensor_id/Compressor-2015:CompressionRatio");
+		URL iimotDataURl = new URL("http://localhost:" + this.localServerPort + "/iimot/request/latest_data/sensor_id/Compressor-2015:CompressionRatio");
 		
-		ResponseEntity<DatapointsResponse> response = this.template.exchange(windDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), DatapointsResponse.class);
+		ResponseEntity<DatapointsResponse> response = this.template.exchange(iimotDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), DatapointsResponse.class);
 			
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK,response.getStatusCode());
@@ -126,9 +129,9 @@ public class WindDataServiceIT {
 		headers.put("Authorization", Collections.singletonList("testHeader"));
 
 		
-		URL windDataURl = new URL("http://localhost:" + this.localServerPort + "/services/windservices/yearly_data/sensor_id/RMD_metric3,RMD_metric2");
+		URL iimotDataURl = new URL("http://localhost:" + this.localServerPort + "/iimot/request/yearly_data/sensor_id/RMD_metric3,RMD_metric2");
 		
-		ResponseEntity<DatapointsResponse> response = this.template.exchange(windDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), DatapointsResponse.class);
+		ResponseEntity<DatapointsResponse> response = this.template.exchange(iimotDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), DatapointsResponse.class);
 		
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK,response.getStatusCode());
@@ -147,13 +150,35 @@ public class WindDataServiceIT {
 		headers.put("Authorization", Collections.singletonList("testHeader"));
 
 		
-		URL windDataURl = new URL("http://localhost:" + this.localServerPort + "/services/windservices/tags");
+		URL iimotDataURl = new URL("http://localhost:" + this.localServerPort + "/iimot/request/tags");
 		
-		ResponseEntity<String> response = this.template.exchange(windDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), String.class);
+		ResponseEntity<String> response = this.template.exchange(iimotDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), String.class);
 			
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK,response.getStatusCode());
-	}	
+	}
+
+
+	/**
+	 * @throws Exception -
+	 */
+	@SuppressWarnings("nls")
+	@Test
+	public void testFacilityAssets() throws Exception  {
+		HttpHeaders headers = new HttpHeaders();
+		headers.put("Authorization", Collections.singletonList("testHeader"));
+
+
+		URL iimotDataURl = new URL("http://localhost:" + this.localServerPort + "/iimot/request/facility_assets");
+		ResponseEntity<String> response = this.template.exchange(iimotDataURl.toString(), HttpMethod.GET, new HttpEntity<byte[]>(headers), String.class);
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK,response.getStatusCode());
+
+
+		JSONObject bodyJson = new JSONObject(response.getBody());
+		JSONArray features = bodyJson.getJSONArray("features");
+		assertEquals(features.length(),35);
+	}
 
 
 }

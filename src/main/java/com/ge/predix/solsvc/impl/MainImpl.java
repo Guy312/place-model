@@ -1,9 +1,6 @@
 package com.ge.predix.solsvc.impl;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,11 +17,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Coordinate;
-import org.geotools.feature.FeatureFactory;
-import org.geotools.geojson.GeoJSONUtil;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.cxf.common.i18n.Exception;
 import org.apache.http.Header;
 import org.apache.http.client.entity.GzipDecompressingEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -59,7 +53,7 @@ import org.codehaus.jettison.json.JSONObject;
  * @author predix -
  */
 @Component
-public class MainAPI implements com.ge.predix.solsvc.api.MainAPI {
+public class MainImpl implements com.ge.predix.solsvc.api.MainAPI {
 
 	@Autowired
 	private IServiceManagerService serviceManagerService;
@@ -78,12 +72,12 @@ public class MainAPI implements com.ge.predix.solsvc.api.MainAPI {
 	private TimeseriesFactory timeseriesFactory;
 
 
-	private static Logger log = LoggerFactory.getLogger(MainAPI.class);
+	private static Logger log = LoggerFactory.getLogger(MainImpl.class);
 
 	/**
 	 * -
 	 */
-	public MainAPI() {
+	public MainImpl() {
 		super();
 	}
 
@@ -253,6 +247,7 @@ public class MainAPI implements com.ge.predix.solsvc.api.MainAPI {
 	public Response facilityAssets() throws JSONException {
 
 		ResponseBuilder responseBuilder = Response.status(Status.OK);
+
 		responseBuilder.type(MediaType.APPLICATION_JSON);
 		try {
 			JSONObject jo = this.testAssets();
@@ -453,7 +448,7 @@ public class MainAPI implements com.ge.predix.solsvc.api.MainAPI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ge.predix.solsvc.api.MainAPI#getWindDataTags()
+	 * @see com.ge.predix.solsvc.api.MainImpl#getWindDataTags()
 	 */
 	@Override
 	public Response getWindDataTags(String authorization) {

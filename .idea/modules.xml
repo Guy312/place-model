@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/winddata-timeseries-service.iml" filepath="$PROJECT_DIR$/winddata-timeseries-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iimot-predix-engine.iml" filepath="$PROJECT_DIR$/iimot-predix-engine.iml" />
     </modules>
   </component>
 </project>
